@@ -55,7 +55,13 @@ router.post('/:id/friends/:friendId', async (req, res) => {
   const user = await User.findOne({userId: id}).exec();
   user.friends.push(friend);
   user.save();
-  res.json(user);
+  const friendData = await User.findOne({userId: friend}).exec();
+  friendData.friends.push(id);
+  friendData.save();
+  res.json({
+    user: user,
+    newFriend: friendData
+  });
 });
 
 router.delete('/:id/friends/:friendId', async (req, res) => {
